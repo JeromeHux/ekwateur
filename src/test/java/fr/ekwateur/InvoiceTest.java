@@ -16,7 +16,7 @@ class InvoiceTest {
     @Nested
     @DisplayName("Individual customer invoice")
     class IndividualCustomerInvoiceTest {
-        private final IndividualCustomer individualCustomer = new IndividualCustomer();
+        private final IndividualCustomer individualCustomer = new IndividualCustomer("EKW100000000", "Mr", "Doe", "John");
 
         @ParameterizedTest
         @MethodSource("provideConsumption")
@@ -45,7 +45,7 @@ class InvoiceTest {
     @Nested
     @DisplayName("Professional customer with small turnover invoice")
     class ProfessionalCustomerWithSmallTurnoverInvoiceTest {
-        private final ProfessionalCustomer professionalCustomer = new ProfessionalCustomer(1000);
+        private final ProfessionalCustomer professionalCustomer = new ProfessionalCustomer("EKW100000001", "12345678901234", "foo", 1000);
 
         @ParameterizedTest
         @MethodSource("provideConsumption")
@@ -74,7 +74,7 @@ class InvoiceTest {
     @Nested
     @DisplayName("Professional customer with big turnover invoice")
     class ProfessionalCustomerWithBigTurnoverInvoiceTest {
-        private final ProfessionalCustomer professionalCustomer = new ProfessionalCustomer(100000000);
+        private final ProfessionalCustomer professionalCustomer = new ProfessionalCustomer("EKW100000002", "12345678901235", "bar", 100000000);
 
         @ParameterizedTest
         @MethodSource("provideConsumption")
