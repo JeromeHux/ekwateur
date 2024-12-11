@@ -1,4 +1,4 @@
 package fr.ekwateur;
 
-public class IndividualCustomer {
+public class IndividualCustomer extends Customer{
 }
