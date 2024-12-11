@@ -43,8 +43,8 @@ class InvoiceTest {
     }
 
     @Nested
-    @DisplayName("Professional customer invoice")
-    class ProfessionalCustomerInvoiceTest {
+    @DisplayName("Professional customer with small turnover invoice")
+    class ProfessionalCustomerWithSmallTurnoverInvoiceTest {
         private final ProfessionalCustomer professionalCustomer = new ProfessionalCustomer(1000);
 
         @ParameterizedTest
@@ -67,6 +67,35 @@ class InvoiceTest {
                     Arguments.of(new Consumption(101, 0), 11.312),
                     Arguments.of(new Consumption(0, 250), 29.25),
                     Arguments.of(new Consumption(151, 150), 34.462)
+            );
+        }
+    }
+
+    @Nested
+    @DisplayName("Professional customer with big turnover invoice")
+    class ProfessionalCustomerWithBigTurnoverInvoiceTest {
+        private final ProfessionalCustomer professionalCustomer = new ProfessionalCustomer(100000000);
+
+        @ParameterizedTest
+        @MethodSource("provideConsumption")
+        @DisplayName("""
+                Given an professional customer with a turnover of 100000000
+                and his energy consumption,
+                when calculating amount,
+                then get the correct total.
+                """)
+        void professional_customer_energy_consumption_with_big_turnover(Consumption consumption, double expectedAmount) {
+            final double actualAmount = invoice.calculateBillAmount(professionalCustomer, consumption);
+
+            assertEquals(expectedAmount, actualAmount);
+
+        }
+
+        private static Stream<Arguments> provideConsumption() {
+            return Stream.of(
+                    Arguments.of(new Consumption(100, 0), 11.0),
+                    Arguments.of(new Consumption(0, 250), 30.75),
+                    Arguments.of(new Consumption(151, 150), 35.06)
             );
         }
     }
