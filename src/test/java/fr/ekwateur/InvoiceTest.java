@@ -1,72 +1,38 @@
 package fr.ekwateur;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InvoiceTest {
+    private final IndividualCustomer customer = new IndividualCustomer();
+    private final Invoice invoice = new Invoice();
 
-    @Test
-    @DisplayName("""
-            Given an individual customer
-            and his gaz consumption,
-            when calculating amount,
-            then get the correct total.
-            """)
-    void individual_customer_gaz_consumption() {
-        final double gasInKwh = 100;
-        final double electricityInKwh = 0;
-        final Consumption consumption = new Consumption(gasInKwh, electricityInKwh);
-        final IndividualCustomer customer = new IndividualCustomer();
-        final Invoice invoice = new Invoice();
-
-        final double actualAmount = invoice.calculateBillAmount(customer, consumption);
-
-        final double expectedAmount = 10.8;
-        assertEquals(expectedAmount, actualAmount);
-
-    }
-
-    @Test
-    @DisplayName("""
-            Given an individual customer
-            and his electricity consumption,
-            when calculating amount,
-            then get the correct total.
-            """)
-    void individual_customer_electricity_consumption() {
-        final double gasInKwh = 0;
-        final double electricityInKwh = 250;
-        final Consumption consumption = new Consumption(gasInKwh, electricityInKwh);
-        final IndividualCustomer customer = new IndividualCustomer();
-        final Invoice invoice = new Invoice();
-
-        final double actualAmount = invoice.calculateBillAmount(customer, consumption);
-
-        final double expectedAmount = 33.25;
-        assertEquals(expectedAmount, actualAmount);
-
-    }
-
-    @Test
+    @ParameterizedTest
+    @MethodSource("provideConsumption")
     @DisplayName("""
             Given an individual customer
             and his energy consumption,
             when calculating amount,
             then get the correct total.
             """)
-    void individual_customer_energy_consumption() {
-        final double gasInKwh = 151;
-        final double electricityInKwh = 150;
-        final Consumption consumption = new Consumption(gasInKwh, electricityInKwh);
-        final IndividualCustomer customer = new IndividualCustomer();
-        final Invoice invoice = new Invoice();
-
+    void individual_customer_energy_consumption(Consumption consumption, double expectedAmount) {
         final double actualAmount = invoice.calculateBillAmount(customer, consumption);
 
-        final double expectedAmount = 36.258;
         assertEquals(expectedAmount, actualAmount);
 
+    }
+
+    private static Stream<Arguments> provideConsumption() {
+        return Stream.of(
+                Arguments.of(new Consumption(100, 0), 10.8),
+                Arguments.of(new Consumption(0, 250), 33.25),
+                Arguments.of(new Consumption(151, 150), 36.258)
+        );
     }
 }
